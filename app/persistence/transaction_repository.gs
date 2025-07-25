@@ -7,6 +7,17 @@ class TransactionRepository {
   save(transactionEntity) {
     // Por ahora solo dejar un log.
     Logger.log("Guardando transacción:\n" + transactionEntity.toString());
-    this.sheet.appendRow(Object.values(transactionEntity));
+    this.sheet.appendRow(
+      Object.values(transactionEntity).map((val) => {
+        if (
+          typeof val === "object" &&
+          val !== null &&
+          Object.keys(val).length === 0
+        ) {
+          return "";
+        }
+        return val;
+      })
+    );
   }
 }
