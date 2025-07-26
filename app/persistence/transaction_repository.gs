@@ -5,7 +5,6 @@ class TransactionRepository {
     );
   }
   save(transactionEntity) {
-    // Por ahora solo dejar un log.
     Logger.log("Guardando transacción:\n" + transactionEntity.toString());
     this.sheet.appendRow(
       Object.values(transactionEntity).map((val) => {
