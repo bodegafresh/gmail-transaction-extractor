@@ -4,6 +4,7 @@ class TransactionEntity {
    * {
    *   tipo: 'INGRESO' o 'RETIRO',
    *   medio: 'DEBITO', 'CREDITO', 'TRANSFERENCIA', etc,
+   *   banco: 'BCI', 'EDWARDS', etc,
    *   fecha: '2024-06-02',
    *   hora: '15:23',
    *   monto: 10000,
@@ -15,6 +16,7 @@ class TransactionEntity {
   constructor(data) {
     this.tipo = data.tipo;
     this.medio = data.medio;
+    this.banco = data.banco;
     this.fecha = data.fecha;
     this.hora = data.hora;
     this.monto = data.monto;

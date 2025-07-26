@@ -25,6 +25,7 @@ class BciExtractor extends Extractor {
     return new TransactionEntity({
       tipo: isCancellation ? VALUE_REVENUE : VALUE_EGRESS,
       medio: VALUE_TYPE_CREDIT,
+      banco: VALUE_BANK_BCI,
       fecha: date,
       hora: time,
       monto: amount,
@@ -39,7 +40,7 @@ class BciExtractor extends Extractor {
   /**
    * Parsing de correo de transferencia BCI
    */
-  _parseBCITransfer(body) {
+  _parseBCITransfer(body, time) {
     const amount = extractAmount(
       body,
       "CLP",
@@ -61,6 +62,7 @@ class BciExtractor extends Extractor {
     return new TransactionEntity({
       tipo: VALUE_EGRESS,
       medio: VALUE_TYPE_TRANS,
+      banco: VALUE_BANK_BCI,
       fecha: date,
       hora: time,
       monto: amount,
@@ -85,6 +87,7 @@ class BciExtractor extends Extractor {
     return new TransactionEntity({
       tipo: VALUE_EGRESS,
       medio: VALUE_TYPE_TRANS,
+      banco: VALUE_BANK_BCI,
       fecha: date,
       hora: time,
       monto: amount,
@@ -99,7 +102,7 @@ class BciExtractor extends Extractor {
   /**
    * Parsing de pago de crédito
    */
-  _parseBCICreditPayment(htmlBody, sheet, date, time) {
+  _parseBCICreditPayment(htmlBody, date, time) {
     // Usa RegEx que reconozca bien el HTML y extrae info relevante
     const amount = extractAmount(
       htmlBody,
@@ -117,44 +120,43 @@ class BciExtractor extends Extractor {
       ""
     );
 
-    appendToSheet(sheet, [
-      date,
-      time,
-      "Pago Crédito",
-      amount,
-      description,
-      cuotas,
-      "Nacional",
-      "Egreso",
-      "",
-      "",
-    ]);
+    return new TransactionEntity({
+      tipo: VALUE_EGRESS,
+      medio: VALUE_TYPE_TRANS,
+      banco: VALUE_BANK_BCI,
+      fecha: date,
+      hora: time,
+      monto: amount,
+      moneda: VALUE_CURRENCY_CLP,
+      descripcion: description + (cuotas ? ` (Cuotas: ${cuotas})` : ""),
+    });
   }
 
   parse(message) {
-    Logger.log("Parsing message with BciExtractor: " + message.getBody());
     Logger.log("Parsing message with BciExtractor: " + message.getPlainBody());
     var from = message.getFrom();
+    const date = formatDate(message.getDate());
+    const time = formatTime(message.getDate());
     if (
       message.getSubject() === "Notificación de uso de tu tarjeta de crédito" &&
       from.includes("contacto@bci.cl")
     ) {
-      return _parseBCICreditCard(message.getPlainBody());
+      return this._parseBCICreditCard(message.getPlainBody());
     } else if (
       message.getSubject() === "Aviso de Transferencia de Fondos." &&
       from.includes("transferencias@bci.cl")
     ) {
-      return _parseBCITransfer(message.getPlainBody());
+      return this._parseBCITransfer(message.getPlainBody(), time);
     } else if (
       message.getSubject() === "Pago de Cuenta en Linea" &&
       from.includes("contacto@bci.cl")
     ) {
-      return _parseBCIOnlinePayment(message.getPlainBody());
+      return this._parseBCIOnlinePayment(message.getPlainBody());
     } else if (
       message.getSubject() === "Pago crédito consumo" &&
       from.includes("contacto@bci.cl")
     ) {
-      return _parseBCICreditPayment(message.getPlainBody(), message.getDate());
+      return this._parseBCICreditPayment(message.getPlainBody(), date, time);
     } else {
       Logger.log(
         "Mensaje no reconocido. Subject: " +
@@ -163,15 +165,5 @@ class BciExtractor extends Extractor {
           from
       );
     }
-
-    return new TransactionEntity({
-      tipo: VALUE_REVENUE,
-      medio: VALUE_TYPE_DEDIT,
-      fecha: "2024-06-02",
-      hora: "16:30",
-      monto: 15990,
-      moneda: VALUE_CURRENCY_CLP,
-      descripcion: "Compra en Supermercado Lider",
-    });
   }
 }

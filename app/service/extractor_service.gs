@@ -47,10 +47,8 @@ class ExtractorService {
         var extractor = this._getExtractorForDomain(domain);
         var trans = extractor.parse(message);
         Logger.log("Transacción extraída: " + JSON.stringify(trans));
+        this.respository.save(trans);
       });
     });
-    var extractor = new BciExtractor();
-    var trans = extractor.parse("Mensaje de prueba");
-    this.respository.save(trans);
   }
 }
