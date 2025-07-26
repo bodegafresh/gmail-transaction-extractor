@@ -49,28 +49,30 @@ Este proyecto automatiza la extracción de transacciones financieras desde corre
 
 ## 1.2. 📋 Estructura del Proyecto
 
+```
 GMAIL-TRANSACTION-EXTRACTOR/
 ├── app/
-│ ├── extractor/
-│ │ ├── impl/
-│ │ │ ├── bci_extractor.gs
-│ │ │ ├── edwards_extractor.gs
-│ │ │ ├── test_edwards_extractor.gs
-│ │ │ └── extractor.gs
-│ ├── persistence/
-│ │ ├── transaction_entity.gs
-│ │ └── transaction_repository.gs
-│ ├── service/
-│ │ └── extractor_service.gs
-│ ├── utils/
-│ │ ├── constants_values.gs
-│ │ ├── constants.gs
-│ │ └── utils.gs
-│ ├── main.gs
-│ └── appsscript.json
+│   ├── extractor/
+│   │   ├── impl/
+│   │   │   ├── bci_extractor.gs
+│   │   │   ├── edwards_extractor.gs
+│   │   │   ├── test_edwards_extractor.gs
+│   │   │   └── extractor.gs
+│   ├── persistence/
+│   │   ├── transaction_entity.gs
+│   │   └── transaction_repository.gs
+│   ├── service/
+│   │   └── extractor_service.gs
+│   ├── utils/
+│   │   ├── constants_values.gs
+│   │   ├── constants.gs
+│   │   └── utils.gs
+│   ├── main.gs
+│   └── appsscript.json
 ├── .clasp.json
 ├── .gitignore
 └── README.md
+```
 
 ## 1.3. 🏦 ¿Qué hace el script?
 
