@@ -29,6 +29,7 @@ function extractByRegex(body, regex, defaultValue = "") {
 function formatDate(date) {
   return Utilities.formatDate(date, Session.getScriptTimeZone(), "dd/MM/yyyy");
 }
+
 function formatTime(date) {
   return Utilities.formatDate(date, Session.getScriptTimeZone(), "HH:mm");
 }

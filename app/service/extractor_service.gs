@@ -47,7 +47,13 @@ class ExtractorService {
         var extractor = this._getExtractorForDomain(domain);
         var trans = extractor.parse(message);
         Logger.log("Transacción extraída: " + JSON.stringify(trans));
-        this.respository.save(trans);
+        if (trans && Number(trans.monto) !== 0) {
+          this.respository.save(trans);
+        } else {
+          const errorLabel = GmailApp.getUserLabelByName(ERROR_LABEL);
+          thread.addLabel(errorLabel);
+          Logger.log("Transacción ignorada por monto = 0");
+        }
       });
     });
   }

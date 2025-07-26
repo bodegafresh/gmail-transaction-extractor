@@ -11,6 +11,7 @@ const VALUE_TYPE_CREDIT = "Credito";
 const VALUE_TYPE_DEDIT = "Debito";
 const VALUE_TYPE_TRANS = "Transferencia";
 const VALUE_TYPE_CASH = "Cajero";
+const VALUE_TYPE_PAYMENT = "Pago";
 
 // Bancos
 const VALUE_BANK_BCI = "BCI";

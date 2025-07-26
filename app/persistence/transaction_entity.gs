@@ -10,7 +10,6 @@ class TransactionEntity {
    *   monto: 10000,
    *   moneda: 'CLP' o 'USD',
    *   descripcion: 'Detalle del movimiento',
-   *   detalles: { ... }
    * }
    */
   constructor(data) {
@@ -22,7 +21,6 @@ class TransactionEntity {
     this.monto = data.monto;
     this.moneda = data.moneda || "CLP";
     this.descripcion = data.descripcion || "";
-    this.detalles = data.detalles || {};
   }
 
   toString() {

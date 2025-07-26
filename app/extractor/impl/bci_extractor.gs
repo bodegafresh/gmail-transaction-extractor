@@ -41,26 +41,39 @@ class BciExtractor extends Extractor {
    * Parsing de correo de transferencia BCI
    */
   _parseBCITransfer(body, time) {
+    const isReceived = /\brecibido\b/i.test(body); // Busca la palabra "recibido" (o perfecciónalo si lo necesitas)
+
     const amount = extractAmount(
       body,
       "CLP",
-      /Monto transferido\s+\$([0-9\.]+)/
+      isReceived
+        ? /Monto recibido\s+\$([0-9\.]+)/ // Para transferencias recibidas
+        : /Monto transferido\s+\$([0-9\.]+)/ // Para transferencias realizadas
     );
-    const description = extractByRegex(body, /Mensaje\s*(.*)/);
+
     const date = extractByRegex(
       body,
-      /Fecha de abono\s*(\d{2}\/\d{2}\/\d{4})/,
+      isReceived
+        ? /Fecha de la transferencia\s*(\d{2}\/\d{2}\/\d{4})/
+        : /Fecha de abono\s*(\d{2}\/\d{2}\/\d{4})/,
       ""
     );
-    const cuenta = extractByRegex(
-      body,
-      /Cuenta de destino\s*(.*)/,
-      "No encontrado"
-    );
-    const name = extractByRegex(body, /Nombre del destinatario\s*(.*)/, "");
+
+    let bancoOtro, cuenta, nombre, mensaje;
+    if (isReceived) {
+      bancoOtro = extractByRegex(body, /Banco de origen\s*(.*)/, "");
+      cuenta = ""; // no hay cuenta de destino relevante en recibidas
+      nombre = ""; // normalmente no se menciona destinatario
+      mensaje = extractByRegex(body, /Mensaje\s*(.*)/, "");
+    } else {
+      bancoOtro = extractByRegex(body, /Banco de destino\s*(.*)/, "");
+      cuenta = extractByRegex(body, /Cuenta de destino\s*(.*)/, "");
+      nombre = extractByRegex(body, /Nombre del destinatario\s*(.*)/, "");
+      mensaje = extractByRegex(body, /Mensaje\s*(.*)/, "");
+    }
 
     return new TransactionEntity({
-      tipo: VALUE_EGRESS,
+      tipo: isReceived ? VALUE_REVENUE : VALUE_EGRESS,
       medio: VALUE_TYPE_TRANS,
       banco: VALUE_BANK_BCI,
       fecha: date,
@@ -68,9 +81,12 @@ class BciExtractor extends Extractor {
       monto: amount,
       moneda: VALUE_CURRENCY_CLP,
       descripcion:
-        description +
+        (mensaje ? `${mensaje} ` : "") +
+        (isReceived
+          ? `(Banco origen: ${bancoOtro})`
+          : `(Banco destino: ${bancoOtro})`) +
         (cuenta ? ` (Cuenta: ${cuenta})` : "") +
-        (name ? ` (Nombre: ${name})` : ""),
+        (nombre ? ` (Nombre: ${nombre})` : ""),
     });
   }
 
@@ -79,23 +95,23 @@ class BciExtractor extends Extractor {
    */
   _parseBCIOnlinePayment(body, time) {
     const amount = extractAmount(body, "CLP");
-    const description = extractByRegex(body, /Empresa\s*(.*)/, "");
+    const empresa = extractByRegex(body, /Empresa\s*(.*)/, "");
     const date = extractByRegex(body, /Fecha\s*(\d{2}\/\d{2}\/\d{4})/, "");
     const cuenta = extractByRegex(body, /Número de cliente\s*(.*)/, "");
-    const name = extractByRegex(body, /Servicio\s*(.*)/, "");
+    const servicio = extractByRegex(body, /^Servicio (.+)$/m, "");
 
     return new TransactionEntity({
       tipo: VALUE_EGRESS,
-      medio: VALUE_TYPE_TRANS,
+      medio: VALUE_TYPE_PAYMENT,
       banco: VALUE_BANK_BCI,
       fecha: date,
       hora: time,
       monto: amount,
       moneda: VALUE_CURRENCY_CLP,
       descripcion:
-        description +
+        empresa +
         (cuenta ? ` (Cuenta: ${cuenta})` : "") +
-        (name ? ` (Nombre: ${name})` : ""),
+        (servicio ? ` (Servicio: ${servicio})` : ""),
     });
   }
 
@@ -135,8 +151,10 @@ class BciExtractor extends Extractor {
   parse(message) {
     Logger.log("Parsing message with BciExtractor: " + message.getPlainBody());
     var from = message.getFrom();
-    const date = formatDate(message.getDate());
-    const time = formatTime(message.getDate());
+    Logger.log("Date: " + message.getDate());
+    const jsDate = message.getDate(); // objeto Date
+    const date = formatDate(jsDate); // "02/07/2024"
+    const time = formatTime(jsDate);
     if (
       message.getSubject() === "Notificación de uso de tu tarjeta de crédito" &&
       from.includes("contacto@bci.cl")
@@ -151,7 +169,7 @@ class BciExtractor extends Extractor {
       message.getSubject() === "Pago de Cuenta en Linea" &&
       from.includes("contacto@bci.cl")
     ) {
-      return this._parseBCIOnlinePayment(message.getPlainBody());
+      return this._parseBCIOnlinePayment(message.getPlainBody(), time);
     } else if (
       message.getSubject() === "Pago crédito consumo" &&
       from.includes("contacto@bci.cl")

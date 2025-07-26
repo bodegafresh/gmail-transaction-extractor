@@ -10,7 +10,7 @@ class EdwardsExtractor extends Extractor {
       banco: VALUE_BANK_EDWARDS,
       fecha: "2024-06-02",
       hora: "16:30",
-      monto: 15990,
+      monto: 0,
       moneda: VALUE_CURRENCY_CLP,
       descripcion: "Compra en Supermercado Lider",
     });
