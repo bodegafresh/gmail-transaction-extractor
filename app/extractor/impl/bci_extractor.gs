@@ -175,7 +175,6 @@ class BciExtractor extends Extractor {
       Logger.log("Mensaje no definido.");
       return undefined;
     }
-    Logger.log("Parsing message with BciExtractor: " + message.getPlainBody());
     const from = message.getFrom();
     const jsDate = message.getDate();
     const date = formatDate(jsDate);

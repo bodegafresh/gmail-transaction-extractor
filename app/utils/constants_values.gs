@@ -8,7 +8,7 @@ const VALUE_CURRENCY_USD = "USD";
 
 // Tipo de medio
 const VALUE_TYPE_CREDIT = "Credito";
-const VALUE_TYPE_DEDIT = "Debito";
+const VALUE_TYPE_DEBIT = "Debito";
 const VALUE_TYPE_TRANS = "Transferencia";
 const VALUE_TYPE_CASH = "Cajero";
 const VALUE_TYPE_PAYMENT = "Pago cuenta";

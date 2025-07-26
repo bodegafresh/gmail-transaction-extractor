@@ -30,8 +30,7 @@ class ExtractorService {
 
   run() {
     const threads = GmailApp.search(
-      // TO_PROCESS_LABEL + " -label:" + PROCESSED_LABEL
-      TO_PROCESS_LABEL
+      TO_PROCESS_LABEL + " -label:" + PROCESSED_LABEL + " -label:" + ERROR_LABEL
     );
     if (threads.length === 0) {
       Logger.log("No hay hilos por procesar.");
@@ -49,8 +48,11 @@ class ExtractorService {
         Logger.log("Transacción extraída: " + JSON.stringify(trans));
         if (trans && Number(trans.monto) !== 0) {
           this.respository.save(trans);
+          const processedLabel = GmailApp.getUserLabelByName(PROCESSED_LABEL);
+          thread.addLabel(processedLabel);
         } else {
           const errorLabel = GmailApp.getUserLabelByName(ERROR_LABEL);
+          Logger.log(JSON.stringify(message.getPlainBody()));
           thread.addLabel(errorLabel);
           Logger.log("Transacción ignorada por monto = 0");
         }
