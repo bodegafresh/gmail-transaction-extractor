@@ -42,7 +42,6 @@ class NotificationService {
       "*\n" +
       (detail ? "Motivo: " + detail + "\n" : "") +
       transaction.toString()
-      // Puedes añadir más campos si los agregas al TransactionEntity
     );
   }
 

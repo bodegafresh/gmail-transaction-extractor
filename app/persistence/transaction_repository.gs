@@ -50,7 +50,8 @@ class TransactionRepository {
           hora: values[i][4],
           monto: values[i][5],
           moneda: values[i][6],
-          descripcion: values[i][7],
+          estado: values[i][7],
+          descripcion: values[i][8],
         });
         transacciones.push(entidad);
       }
@@ -76,7 +77,8 @@ class TransactionRepository {
           hora: values[i][4],
           monto: values[i][5],
           moneda: values[i][6],
-          descripcion: values[i][7],
+          estado: values[i][7],
+          descripcion: values[i][8],
         })
       );
     }

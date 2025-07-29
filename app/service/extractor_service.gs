@@ -45,7 +45,6 @@ class ExtractorService {
     threads.forEach((thread) => {
       const messages = thread.getMessages();
       messages.forEach((message) => {
-        Logger.log("Procesando mensaje: " + message.getFrom());
         var from = message.getFrom();
         var domain = this._extractDomainFromFromString(from);
         Logger.log("Dominio detectado: " + domain);
@@ -54,7 +53,6 @@ class ExtractorService {
         Logger.log("Transacción extraída: " + JSON.stringify(transaction));
 
         if (transaction && Number(transaction.monto) !== 0) {
-          // Evaluación de duplicado y sospechoso usando el array en memoria
           let status = VALUE_STATE_SUCESS;
           let notifyReason = "";
 
