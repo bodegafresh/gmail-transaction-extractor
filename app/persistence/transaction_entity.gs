@@ -25,6 +25,8 @@ class TransactionEntity {
   }
 
   toString() {
-    return `[${this.fecha} ${this.hora}] ${this.tipo} (${this.medio}) ${this.monto} ${this.moneda} ${this.estado} - ${this.descripcion}`;
+    return `[${this.fecha} ${this.hora}] ${this.tipo} (${this.medio}) ${
+      this.monto
+    } ${this.moneda} ${this.estado} - ${escapeMarkdownV2(this.descripcion)}`;
   }
 }

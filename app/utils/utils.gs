@@ -138,7 +138,7 @@ function isSuspicious(transaction) {
     return {
       suspicious: true,
       reason:
-        "Monto mayor a $" + formatCurrency(ALERT_AMOUNT_THRESHOLD || 800000),
+        "Monto mayor a " + formatCurrency(ALERT_AMOUNT_THRESHOLD || 800000),
     };
   }
   // 2. Palabras clave sospechosas en la descripción
@@ -187,4 +187,32 @@ function isSuspicious(transaction) {
     };
   }
   return { suspicious: false, reason: "" };
+}
+
+/**
+ * Escapa la notación de Markdown V2 para evitar interpretación.
+ * @param {text} text - Texto a escapar
+ * @returns {string} notación escapada para Markdown V2
+ */
+function escapeMarkdownV2(text) {
+  return text
+    .replace(/\\/g, "\\\\")
+    .replace(/_/g, "\\_")
+    .replace(/\*/g, "\\*")
+    .replace(/\[/g, "\\[")
+    .replace(/]/g, "\\]")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)")
+    .replace(/~/g, "\\~")
+    .replace(/`/g, "\\`")
+    .replace(/>/g, "\\>")
+    .replace(/#/g, "\\#")
+    .replace(/\+/g, "\\+")
+    .replace(/-/g, "\\-")
+    .replace(/=/g, "\\=")
+    .replace(/\|/g, "\\|")
+    .replace(/{/g, "\\{")
+    .replace(/}/g, "\\}")
+    .replace(/\./g, "\\.")
+    .replace(/!/g, "\\!");
 }
