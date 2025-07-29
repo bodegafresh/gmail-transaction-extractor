@@ -15,7 +15,6 @@ Este proyecto automatiza la extracción de transacciones financieras desde corre
    - `no_procesado`
    - `duplicada`
    - `sospechosa`
-   - `errores`
 3. Crea **filtros** para los correos de tus bancos, por ejemplo:
    - Todos los mensajes entrantes de tu banco (ej: _@bci.cl_, _@bancoedwards.cl_)
    - Estos filtros deben **aplicar automáticamente el label `finanzas/a_procesar`** a todos los correos transaccionales.
