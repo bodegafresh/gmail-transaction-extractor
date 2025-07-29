@@ -23,3 +23,26 @@ const VALUE_BANK_SECURITY = "SECURITY";
 const VALUE_BANK_BICE = "BICE";
 const VALUE_BANK_BANCOESTADO = "BANCOESTADO";
 const VALUE_BANK_BANCOFALABELLA = "BANCOFALABELLA";
+
+// Estados
+const VALUE_STATE_SUCESS = "Corecto";
+const VALUE_STATE_DUP = "Duplicado";
+const VALUE_STATE_SUSPECT = "Sospechoso";
+
+// Palabras clave de alerta para transacciones sospechosas
+const ALERT_KEYWORDS = [
+  "transferencia internacional",
+  "bitcoin",
+  "casino",
+  "apuesta",
+  "fraude",
+  "error",
+];
+
+// Umbral de monto alto considerado sospechoso
+const ALERT_AMOUNT_THRESHOLD = 800000;
+
+// Hora en la que empiezan a considerarse movimientos nocturnos sospechosos (ej: < 6 ó >= 23)
+const ALERT_NIGHT_HOUR_MIN = 0; // inclusive
+const ALERT_NIGHT_HOUR_MAX = 6; // exclusive (0:00-5:59)
+const ALERT_LATE_HOUR_MIN = 23; // inclusive (23:00-23:59)

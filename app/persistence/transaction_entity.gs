@@ -19,11 +19,12 @@ class TransactionEntity {
     this.fecha = data.fecha;
     this.hora = data.hora;
     this.monto = data.monto;
-    this.moneda = data.moneda || "CLP";
+    this.moneda = data.moneda || VALUE_CURRENCY_CLP;
+    this.estado = data.estado || VALUE_STATE_SUCESS;
     this.descripcion = data.descripcion || "";
   }
 
   toString() {
-    return `[${this.fecha} ${this.hora}] ${this.tipo} (${this.medio}) ${this.monto} ${this.moneda} - ${this.descripcion}`;
+    return `[${this.fecha} ${this.hora}] ${this.tipo} (${this.medio}) ${this.monto} ${this.moneda} ${this.estado} - ${this.descripcion}`;
   }
 }

@@ -4,3 +4,5 @@ const SHEET_NAME = "Historico";
 const PROCESSED_LABEL = "finanzas/procesado";
 const TO_PROCESS_LABEL = "label:finanzas/a_procesar";
 const ERROR_LABEL = "finanzas/no_procesado";
+const TELEGRAM_TOKEN = "<TELEGRAM_TOKEN>"; // acá va el token de Telegram
+const TELEGRAM_CHAT_ID = "<TELEGRAM_CHAT_ID>"; // acá va el chat
